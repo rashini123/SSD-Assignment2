@@ -1,5 +1,9 @@
-IT19216874 - Senevirathne R. Y. 
-IT19217796 - Ratnayake M. A. A. H 
-IT19362854 - Abeygunawardana S.L.
-IT14113246 - Athukorala A. D. R. P. 
+# SSD Assignment 2
 
+
+| Name  | Student ID | Username|
+| ------------- | ------------- | -------------|
+| R.Y Senevirathne  | IT19216874 | rasitha11 |
+| M.A.A.H Rathnayake | IT19217796   | drex7001 |
+| S.L Abeygunawardana | IT19362854   | Sandun01 |
+| Athukorala A. D. R. P.  | IT14113246 | rashini123 |
