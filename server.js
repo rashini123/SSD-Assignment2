@@ -1,39 +1,48 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import dotenv from 'dotenv'
-import cors from 'cors'
-import connectDB from './src/config/db.js'
-import userRoute from './src/routes/userRoutes.js'
+import express from "express";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import cors from "cors";
+import https from "https";
+import fs from "fs";
 
-import downloadableRoutes from './src/routes/downloadableRoutes.js'
-import fileUploadController from './src/controllers/fileUploadController.js'
+import connectDB from "./src/config/db.js";
+import userRoute from "./src/routes/userRoutes.js";
 
-dotenv.config()
-connectDB()
+import downloadableRoutes from "./src/routes/downloadableRoutes.js";
+import fileUploadController from "./src/controllers/fileUploadController.js";
 
-const app = express()
-app.use(cors())
-app.use(bodyParser.json())
+// connect db and load envs
+dotenv.config();
+connectDB();
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
 //set upload folder
-app.use(express.static('/uploads/'));
-app.use('/uploads', express.static('uploads'));
+app.use(express.static("/uploads/"));
+app.use("/uploads", express.static("uploads"));
 
-app.get('/', (req, res) => {
-  res.send('Api is working')
+app.get("/", (req, res) => {
+  res.send("Api is working");
 });
 
-
 //directing api calls to relavent routes
-app.use('/api/users', userRoute)
-app.use('/api/materials', downloadableRoutes)
-app.use('/api/files/', fileUploadController)
+app.use("/api/users", userRoute);
+app.use("/api/materials", downloadableRoutes);
+app.use("/api/files/", fileUploadController);
 
-const PORT = process.env.PORT || 8080
+// init certificate
+const options = {
+  key: fs.readFileSync("./src/certificates/key.pem"),
+  cert: fs.readFileSync("./src/certificates/certificate.pem"),
+};
 
-app.listen(
-  PORT,
+const PORT = process.env.PORT || 8080;
+
+const server = https.createServer(options, app);
+server.listen(PORT, function (req, res) {
   console.log(
     `Server running in "${process.env.NODE_ENV} mode" on port:${PORT}`
-  )
-)
+  );
+});
