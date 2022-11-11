@@ -8,7 +8,6 @@ import fs from "fs";
 import connectDB from "./src/config/db.js";
 import userRoute from "./src/routes/userRoutes.js";
 
-import downloadableRoutes from "./src/routes/downloadableRoutes.js";
 import fileUploadController from "./src/controllers/fileUploadController.js";
 
 // connect db and load envs
@@ -29,7 +28,6 @@ app.get("/", (req, res) => {
 
 //directing api calls to relavent routes
 app.use("/api/users", userRoute);
-app.use("/api/materials", downloadableRoutes);
 app.use("/api/files/", fileUploadController);
 
 // init certificate
@@ -43,6 +41,6 @@ const PORT = process.env.PORT || 8080;
 const server = https.createServer(options, app);
 server.listen(PORT, function (req, res) {
   console.log(
-    `Server running in "${process.env.NODE_ENV} mode" on port:${PORT}`
+    `\x1b[36mServer running in "${process.env.NODE_ENV} mode" on port:${PORT}\x1b[0m`
   );
 });

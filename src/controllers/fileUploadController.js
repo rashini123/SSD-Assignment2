@@ -5,7 +5,7 @@ const router = express.Router()
 
 // @desc  Upload File
 // @route POST /api/files/upload
-// @access Researcher Workshop Coordinator
+// @access Manager
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, callBack) => {

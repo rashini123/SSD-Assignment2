@@ -1,54 +1,48 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
-const userModel = mongoose.Schema({
-
+const userModel = mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-        unique: true,
-      },
-      password: {
-        type: String,
-        required: true,
-      },
-      contact_no: {
-        type: String,
-        required: true,
-      },
-      isAdmin: {
-        type: Boolean,
-        required: true,
-        default: false,
-      },
-      user_type: {
-        type: String,
-        required: true,
-        
-      },
+      type: String,
+      required: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true, //Admin, Worker, Manager
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-    }, {
-        timestamps: true
+userModel.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
-})
-
-userModel.methods.matchPassword = async function (enteredPassword){
-  return await bcrypt.compare(enteredPassword, this.password)
-}
-
-userModel.pre('save', async function(next){
-  if(!this.isModified('password')){
-    next()
+userModel.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
   }
 
-  const Salt = await bcrypt.genSalt(10)
-  this.password = await bcrypt.hash(this.password, Salt)
+  const Salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, Salt);
+});
 
-})
-
-const User = mongoose.model('users', userModel)
-export default User
+const User = mongoose.model("users", userModel);
+export default User;

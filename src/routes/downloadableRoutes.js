@@ -1,6 +1,6 @@
 import express from 'express';
 import downloadableController from '../controllers/downloadableController.js';
-import { protect, admin } from '../middleware/authMiddleware.js'
+import { protect } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
