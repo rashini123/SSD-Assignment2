@@ -7,6 +7,7 @@ import fs from "fs";
 
 import connectDB from "./src/config/db.js";
 import userRoute from "./src/routes/userRoutes.js";
+import messageRoutes from "./src/routes/messageRoutes.js";
 
 import fileUploadController from "./src/controllers/fileUploadController.js";
 
@@ -26,8 +27,9 @@ app.get("/", (req, res) => {
   res.send("Api is working");
 });
 
-//directing api calls to relavent routes
+//directing api calls to relevant routes
 app.use("/api/users", userRoute);
+app.use("/api/messages", messageRoutes);
 app.use("/api/files/", fileUploadController);
 
 // init certificate
