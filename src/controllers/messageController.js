@@ -2,7 +2,10 @@ import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 
 import Message from "../models/messageModel.js";
-import { encryptMessage, decryptMessage } from "../utils/messageEncryption.js";
+import {
+  encryptMessage,
+  decryptMessage,
+} from "../utils/aesMessageEncryption.js";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -48,7 +51,7 @@ const getAllReceivedMessages = asyncHandler(async (req, res) => {
     try {
       const messagesEncrypted = await Message.find({
         receiver: ObjectId(userID),
-      });
+      }).populate("sender", "name");;
 
       const messagesDecrypted = [];
       messagesEncrypted.forEach((data) => {
@@ -83,12 +86,12 @@ const getAllSentMessages = asyncHandler(async (req, res) => {
     try {
       const messagesEncrypted = await Message.find({
         sender: ObjectId(userID),
-      });
+      }).populate("receiver", "name");
 
       const messagesDecrypted = [];
       messagesEncrypted.forEach((data) => {
         let msg = data.message;
-        let msgKey = data.receiver;
+        let msgKey = data.receiver.id;
         let decryptedMsg = decryptMessage(msg, msgKey);
         data.message = decryptedMsg;
         messagesDecrypted.push(data);

@@ -7,12 +7,10 @@ import {
   loginUser,
   deleteUser,
   validateUserToken,
+  getUsersForMessaging,
 } from "../controllers/userController.js";
 
-import {
-  protect,
-  adminAuth,
-} from "../middleware/authMiddleware.js";
+import { protect, adminAuth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -20,13 +18,15 @@ const router = express.Router();
 router.route("/admin").post(createAdminUser);
 
 // User ------------------------------------------------------------
+
+// @Authenticated User
+router.route("/all").get(protect, getUsersForMessaging);
+router.route("/:id").get(protect, getUserAccountByID);
+
 // @Admin
 router.route("/").post(protect, adminAuth, createUser);
 router.route("/").get(protect, adminAuth, getUsers);
 router.route("/:id").delete(protect, adminAuth, deleteUser);
-
-// @Authenticated User
-router.route("/:id").get(protect, getUserAccountByID);
 
 // @Public
 router.route("/login").post(loginUser);

@@ -40,7 +40,7 @@ const adminAuth = (req, res, next) => {
 };
 
 const managerAuth = (req, res, next) => {
-  if (req.user && req.user.type == "Manager") {
+  if ((req.user && req.user.type == "Manager") || req.user.type == "Admin") {
     next();
   } else {
     res.status(401);
@@ -50,7 +50,10 @@ const managerAuth = (req, res, next) => {
 };
 
 const workerAuth = (req, res, next) => {
-  if (req.user && req.user.type == "Worker") {
+  if (
+    (req.user && req.user.type == "Worker" && req.user.type == "Manager") ||
+    req.user.type == "Admin"
+  ) {
     next();
   } else {
     res.status(401);

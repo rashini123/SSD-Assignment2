@@ -6,6 +6,7 @@ import {
   getAllSentMessages,
   saveMessage,
 } from "../controllers/messageController.js";
+
 import {
   adminAuth,
   managerAuth,
@@ -18,6 +19,7 @@ router.route("/").get(protect, adminAuth, getAllMessages);
 router.route("/").post(protect, saveMessage);
 router.route("/received/:id").get(protect, getAllReceivedMessages);
 router.route("/sent/:id").get(protect, getAllSentMessages);
+
 router.route("/:id").delete(protect, managerAuth, deleteMessage);
 
 export default router;

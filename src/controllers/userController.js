@@ -24,9 +24,9 @@ const createAdminUser = asyncHandler(async (req, res) => {
     type,
   });
   if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
+    res.status(201).send({
+      success: true,
+      message: "User created successfully!",
     });
   } else {
     res.status(400);
@@ -74,10 +74,8 @@ const createUser = asyncHandler(async (req, res) => {
     if (user) {
       res.status(201).json({
         _id: user._id,
-        name: user.name,
-        username: user.username,
-        email: user.email,
-        type: user.type,
+        success: true,
+        message: "User created successfully!",
       });
     } else {
       res.status(200).send({
@@ -93,7 +91,7 @@ const createUser = asyncHandler(async (req, res) => {
 // @route GET /api/users/
 // @access Admin
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({});
+  const users = await User.find({}, "-password");
   res.json(users);
 });
 
@@ -153,6 +151,7 @@ const loginUser = asyncHandler(async (req, res) => {
       name: userWithUserName.name,
       email: userWithUserName.email,
       type: userWithUserName.type,
+      username: userWithUserName.username,
       token: generateToken(userWithUserName._id),
     });
   } else {
@@ -163,6 +162,7 @@ const loginUser = asyncHandler(async (req, res) => {
         name: userWithEmail.name,
         email: userWithEmail.email,
         type: userWithEmail.type,
+        username: userWithEmail.username,
         token: generateToken(userWithEmail._id),
       });
     } else {
@@ -180,15 +180,45 @@ const validateUserToken = asyncHandler(async (req, res) => {
   const tokenResult = getDecryptedTokenValue(userToken);
 
   if (tokenResult) {
-    const user = await User.find({ _id: tokenResult.id });
+    const user = await User.findById(tokenResult.id);
     if (user) {
-      res.status(200).send({ success: true, message: "Not Expired!" });
+      res.status(200).send({
+        success: true,
+        message: "Not Expired!",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          type: user.type,
+          username: user.username,
+        },
+      });
     } else {
       res.status(401).send({ success: false, message: "Unauthorized!" });
     }
   } else {
     // res.status(200).send({ success: false, message: "Expired!" });
     res.status(401).send({ success: false, message: "Unauthorized!" });
+  }
+});
+
+// @desc  View All Users
+// @route GET /api/users/all
+// @access Admin
+const getUsersForMessaging = asyncHandler(async (req, res) => {
+  const users = await User.find({}, "name");
+  const allUsers = [];
+
+  if (users && users.length > 0) {
+    users.forEach((element) => {
+      if (element.name == "Super Admin" || req.user.name == element.name) {
+      } else {
+        allUsers.push(element);
+      }
+    });
+    res.json(allUsers);
+  } else {
+    res.json([]);
   }
 });
 
@@ -200,4 +230,5 @@ export {
   loginUser,
   deleteUser,
   validateUserToken,
+  getUsersForMessaging,
 };

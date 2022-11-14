@@ -2,6 +2,8 @@ import crypto from "crypto";
 
 const algorithm = "aes-256-ctr";
 
+// AES Encryption and Decryption
+
 const encryptMessage = (message, key) => {
   try {
     const iv = crypto.randomBytes(16);

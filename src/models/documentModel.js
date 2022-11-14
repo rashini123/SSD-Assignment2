@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 
 const documentModel = mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: false,
+    },
+    fName: {
+      type: String,
+      required: true,
+    },
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

@@ -9,7 +9,7 @@ import connectDB from "./src/config/db.js";
 import userRoute from "./src/routes/userRoutes.js";
 import messageRoutes from "./src/routes/messageRoutes.js";
 
-import fileUploadController from "./src/controllers/fileUploadController.js";
+import documentRoutes from "./src/routes/documentRoutes.js";
 
 // connect db and load envs
 dotenv.config();
@@ -21,16 +21,15 @@ app.use(bodyParser.json());
 
 //set upload folder
 app.use(express.static("/uploads/"));
-app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.send("Api is working");
 });
 
 //directing api calls to relevant routes
-app.use("/api/users", userRoute);
+app.use("/api/documents/", documentRoutes);
 app.use("/api/messages", messageRoutes);
-app.use("/api/files/", fileUploadController);
+app.use("/api/users", userRoute);
 
 // init certificate
 const options = {
